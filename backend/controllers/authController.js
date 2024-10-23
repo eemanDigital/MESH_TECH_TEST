@@ -8,13 +8,8 @@ const {
   insertRecord,
 } = require("../sqlQueries");
 const userSchema = require("../userSchema");
+const { generateToken, createSendToken } = require("../utils/createSendToken");
 
-// generate access token handler
-const generateToken = (userId) => {
-  return jwt.sign({ userId }), process.env.JWT_SECRET, { expiresIn: "7d" };
-};
-
-console.log(process.env.JWT_SECRET);
 // ********************************
 // Register a new user
 // ********************************
@@ -87,13 +82,10 @@ exports.loginUser = async (req, res, next) => {
     // Compare password
     const checkPasswordMatch = await bcrypt.compare(password, user.password);
 
-    console.log(checkPasswordMatch);
-
+    // If password match is successful generate token and return response
     if (checkPasswordMatch) {
-      return res.status(200).json({
-        message: "Login successful",
-        token: generateToken(user.userId),
-      });
+      // Generate token
+      createSendToken(user, 200, res);
     } else {
       return res.status(401).json({
         message: "Invalid password",
