@@ -1,22 +1,37 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const mysql = require("mysql");
+const { connectDB } = require("./db");
+const userRoute = require("./routers/userRouter");
 const cookieParser = require("cookie-parser");
 
-//load environment variables
+// Load environment variables
 dotenv.config({ path: "./config.env" });
 
 // Create express app
 const app = express();
-// It parses incoming requests with JSON payloads
+
+// Allow cross-origin requests
+app.use(cors());
+
+// Parse incoming requests with JSON payloads
 app.use(express.json());
-//  It parses incoming requests with urlencoded payloads
+
+// Parse incoming requests with urlencoded payloads
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 5000;
+// Connect to the database
+connectDB()
+  .then(() => {
+    const PORT = process.env.PORT || 5000;
 
-//  Start the server on port 5000
-app.listen(process.env.PORT, () =>
-  console.log(`Server is running on port ${PORT} `)
-);
+    app.use("/users", userRoute);
+
+    // Start the server on the specified port
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to the database:", err);
+  });
