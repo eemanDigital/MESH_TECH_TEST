@@ -1,3 +1,4 @@
+// require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -6,7 +7,6 @@ const {
   checkRecordExists,
   insertRecord,
 } = require("../sqlQueries");
-const { user } = require("../dbConfig");
 const userSchema = require("../userSchema");
 
 // generate access token handler
@@ -14,6 +14,7 @@ const generateToken = (userId) => {
   return jwt.sign({ userId }), process.env.JWT_SECRET, { expiresIn: "7d" };
 };
 
+console.log(process.env.JWT_SECRET);
 // ********************************
 // Register a new user
 // ********************************
@@ -36,7 +37,6 @@ exports.registerUser = async (req, res) => {
     password: hashedPassword,
     firstName,
     lastName,
-    password,
     salary,
     age,
     registerday: new Date().toISOString().slice(0, 19).replace("T", " "), // format date to mysql datetime
