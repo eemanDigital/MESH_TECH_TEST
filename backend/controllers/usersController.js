@@ -77,7 +77,6 @@ exports.getUsersByAgeRange = async (req, res) => {
 // get users who registered after a specific user
 exports.getUserRegisterAfter = async (req, res) => {
   const { userId } = req.params;
-
   try {
     const users = await searchUserAfterRegistration(userId);
     res.status(200).json({ users });
