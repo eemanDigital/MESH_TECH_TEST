@@ -8,14 +8,19 @@ const {
   insertRecord,
 } = require("../sqlQueries");
 const userSchema = require("../userSchema");
-const { generateToken, createSendToken } = require("../utils/createSendToken");
+const { createSendToken } = require("../utils/createSendToken");
 
 // ********************************
 // Register a new user
 // ********************************
 exports.registerUser = async (req, res) => {
-  // get user details from request body
-  const { username, firstName, lastName, password, salary, age } = req.body;
+  // get user details from request body and trim inputs
+  const username = req.body.username.trim();
+  const firstName = req.body.firstName.trim();
+  const lastName = req.body.lastName.trim();
+  const password = req.body.password.trim();
+  const salary = parseInt(req.body.salary, 10); // Ensure salary is an integer
+  const age = parseInt(req.body.age, 10); // Ensure age is an integer
 
   //  check if all fields are provided
   if (!username || !firstName || !lastName || !password || !salary || !age) {
@@ -97,4 +102,33 @@ exports.loginUser = async (req, res, next) => {
       message: "Server error",
     });
   }
+};
+
+// get user login status
+exports.isLoggedIn = (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(401).json({ message: "You are not logged in" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res
+        .status(401)
+        .json({ message: "Invalid token. Please log in again." });
+    }
+
+    req.user = decoded; // Store the decoded user information in the request object
+    return res.status(200).json({ isLoggedIn: true });
+  });
+};
+
+// logout user
+exports.logoutUser = (req, res) => {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0), // Set the cookie to expire immediately
+  });
+  res.status(200).json({ message: "Logout successful" });
 };

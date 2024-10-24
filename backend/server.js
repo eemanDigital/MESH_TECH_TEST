@@ -17,6 +17,9 @@ app.use(cors());
 // Parse incoming requests with JSON payloads
 app.use(express.json());
 
+// parse cookies
+app.use(cookieParser());
+
 // Parse incoming requests with urlencoded payloads
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,6 +28,7 @@ connectDB()
   .then(() => {
     const PORT = process.env.PORT || 5000;
 
+    // router middlewares
     app.use("/users", userRoute);
 
     // Start the server on the specified port
