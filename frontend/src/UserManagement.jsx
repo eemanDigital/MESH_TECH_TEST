@@ -80,7 +80,7 @@ const UserManagement = ({ refreshTrigger }) => {
   //logout user handler
   const logout = async () => {
     await dataFetcher("/logout");
-    navigate("/login");
+    navigate("/");
   };
 
   const renderSearchForm = () => {

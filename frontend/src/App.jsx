@@ -1,9 +1,11 @@
-import React from "react";
+import { useState } from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import Home from "./Home";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+import UserManagement from "./UserManagement";
 
 function App() {
   return (
@@ -11,13 +13,14 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
-            path="/register"
+            path="/users-list"
             element={
               <AuthContext.Consumer>
                 {({ isLoggedIn }) =>
                   isLoggedIn ? (
-                    <Register />
+                    <UserManagement />
                   ) : (
                     <div>
                       <h4>Login to gain access</h4>

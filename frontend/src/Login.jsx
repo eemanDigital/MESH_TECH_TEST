@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { useDataFetch } from "./hooks/useDataFetcher";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
@@ -24,7 +24,9 @@ const Register = () => {
     e.preventDefault();
     await dataFetcher("/login", "post", formData);
     if (!error && isLoggedIn) {
-      navigate("/register");
+      navigate("/users-list");
+    } else {
+      window.alert(error);
     }
   };
 

@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import { useDataFetch } from "./hooks/useDataFetcher";
-import UserManagement from "./UserManagement";
+// import UserManagement from "./UserManagement";
 import { AuthContext } from "./context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const { dataFetcher, loading, error } = useDataFetch(); // Get dataFetcher, loading, and error from useDataFetch
-  const { setIsLoggedIn } = useContext(AuthContext); // Get setIsLoggedIn from AuthContext
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     firstName: "",
@@ -14,7 +15,7 @@ const Register = () => {
     salary: "",
     age: "",
   });
-  const [refreshTrigger, setRefreshTrigger] = useState(false); // State to trigger re-fetch
+  // const [refreshTrigger, setRefreshTrigger] = useState(false); // State to trigger re-fetch
 
   //  Handle form input changes
   const handleChange = (e) => {
@@ -29,9 +30,9 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await dataFetcher("/register", "post", formData);
-    if (response) {
-      setRefreshTrigger(!refreshTrigger); // Toggle refresh state to trigger re-fetch
-      setIsLoggedIn(true); // Set isLoggedIn to true after successful registration
+
+    if (response.message === "success") {
+      navigate("/login");
     }
 
     //  Clear form data after submission
@@ -50,7 +51,7 @@ const Register = () => {
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit} className="register-form">
-        <h2>Register User</h2>
+        <h2>Register Here</h2>
 
         <div className="form-group">
           <label className="input-label">Username:</label>
@@ -125,8 +126,6 @@ const Register = () => {
           </button>
         </div>
       </form>
-
-      <UserManagement refreshTrigger={refreshTrigger} />
     </div>
   );
 };

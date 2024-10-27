@@ -28,8 +28,17 @@ body {
   margin: 0.5rem;
 }
 
-/* input field styling for */
+/* nav */
+nav a {
+  margin-right: 2rem;
+}
 
+.user-management {
+  height: 100vh;
+  margin: 0.4rem 4rem;
+}
+
+/* input field styling for */
 .form-group {
   /* display: flex;
   flex-direction: row;

@@ -53,7 +53,7 @@ exports.registerUser = async (req, res) => {
     } else {
       // insert user into record if not already existing
       await insertRecord("users", newUser);
-      res.status(201).json({ message: "User created!", data: newUser });
+      res.status(201).json({ message: "success", data: newUser });
     }
   } catch (error) {
     console.error(error);
@@ -80,7 +80,7 @@ exports.loginUser = async (req, res, next) => {
     // If user does not exist
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "User not found, register to gain access",
       });
     }
 
